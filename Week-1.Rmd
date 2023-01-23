@@ -72,7 +72,7 @@ There are 3 different species from the islands of Torgersen, Biscoe and Dream.
 3.    Use indexing to create a new data frame that has only 3 columns: species, island and flipper length columns, and subset all rows for just the ‘Dream’ island.
 
 ```{r}
-
+indexing1<-penguins[penguins$island=='Dream', c("species", "island", "flipper_length_mm")]
 ```
 
 
