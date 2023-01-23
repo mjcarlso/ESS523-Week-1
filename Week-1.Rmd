@@ -78,6 +78,10 @@ indexing1<-penguins[penguins$island=='Dream', c("species", "island", "flipper_le
 
 4.    Use indexing and the mean() function to find the average flipper length for the Adelie species on Dream island. (Note: explore the mean() function and how to deal with NA values).
 
+```{r}
+indexing2<-indexing1[indexing1$species=='Adelie',]
+mean(indexing2$flipper_length_mm)
+```
 
 
 
