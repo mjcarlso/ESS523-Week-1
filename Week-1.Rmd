@@ -63,7 +63,18 @@ penguins[penguins$island=='Dream',]
 
 2.    How many species are in the penguins dataset? What islands were the data collected for? (Note: the unique() function might help)
 
+```{r}
+unique(penguins$species)
+unique(penguins$island)
+```
+There are 3 different species from the islands of Torgersen, Biscoe and Dream.
+
 3.    Use indexing to create a new data frame that has only 3 columns: species, island and flipper length columns, and subset all rows for just the ‘Dream’ island.
+
+```{r}
+
+```
+
 
 4.    Use indexing and the mean() function to find the average flipper length for the Adelie species on Dream island. (Note: explore the mean() function and how to deal with NA values).
 
