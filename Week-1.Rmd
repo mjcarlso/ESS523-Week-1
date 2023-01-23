@@ -13,45 +13,14 @@ source("setup.R")
 ```{r data}
 data("penguins")
 penguins
-```
-
-```{r explore data}
-class(penguins)
-str(penguins)
-
-class(penguins$species)
-str(penguins$species)
-```
-
-```{r lists}
 myList <- list("apple", 1993, FALSE, penguins)
-str(myList)
-
 list(myList, list("more stuff here", list("and more")))
-
 names(myList) <- c("fruit", "year", "logic", "data")
-names(myList)
 ```
 
-```{r indexing}
-myList[[1]]
-myList[["data"]]
+# Exercise 6.3.1
 
-myVector <- c("apple", "banana", "pear")
-myVector[2]
-
-penguins[1:5, 2]
-penguins[1:5, "island"]
-penguins[1, 1:5]
-penguins[1:5, c("species","sex")]
-penguins[penguins$sex=='female',]
-
-penguins$species
-```
-
-# Exercise
-
-1.  Why don't the following lines of code work? Tweak each one so the code runs
+##1.  Why don't the following lines of code work? Tweak each one so the code runs
 
 ```{r 1}
 myList[["fruit"]]
@@ -61,27 +30,82 @@ penguins$flipper_length_mm
 penguins[penguins$island=='Dream',]
 ```
 
-2.    How many species are in the penguins dataset? What islands were the data collected for? (Note: the unique() function might help)
+##2.  How many species are in the penguins dataset? What islands were the data collected for? (Note: the unique() function might help)
 
 ```{r}
 unique(penguins$species)
 unique(penguins$island)
 ```
+
 There are 3 different species from the islands of Torgersen, Biscoe and Dream.
 
-3.    Use indexing to create a new data frame that has only 3 columns: species, island and flipper length columns, and subset all rows for just the ‘Dream’ island.
+##3.  Use indexing to create a new data frame that has only 3 columns: species, island and flipper length columns, and subset all rows for just the 'Dream' island.
 
 ```{r}
 indexing1<-penguins[penguins$island=='Dream', c("species", "island", "flipper_length_mm")]
 ```
 
-
-4.    Use indexing and the mean() function to find the average flipper length for the Adelie species on Dream island. (Note: explore the mean() function and how to deal with NA values).
+##4.  Use indexing and the mean() function to find the average flipper length for the Adelie species on Dream island. (Note: explore the mean() function and how to deal with NA values).
 
 ```{r}
 indexing2<-indexing1[indexing1$species=='Adelie',]
 mean(indexing2$flipper_length_mm)
 ```
+
+# Exercise 6.3.2
+
+##1.  Reorder the variables in penguins so that year is the first column followed by the rest (Hint: look into the use of everything()).
+
+```{r}
+penguins<-penguins%>%
+  relocate(year, species, island, bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g, sex)
+```
+
+##2.  Create a new column called 'size_group' where individuals with body mass greater than the overall average are called 'large' and those smaller are called 'small'.
+
+```{r}
+body_mass_avg <- mean(penguins$body_mass_g, na.rm = TRUE)
+penguins<-penguins %>% 
+  mutate(size_group = if_else(body_mass_g>=body_mass_avg,
+                              paste('large'), paste('small')))
+```
+
+##3.  Find out which year for each species were individuals on average the largest according to body mass.
+
+```{r}
+penguins %>% 
+  group_by(year) %>% 
+  summarise(body_mass_avg = mean(body_mass_g, na.rm = TRUE))
+```
+
+##4.  You want to filter data for years that are not in a vector of given years, but this code doesn't work. Tweak it so that it does. (Yes, you could just filter year to equal 2007 in this case but there is a trouble-shooting lessons here).
+
+```{r}
+penguins7<-penguins %>% 
+  filter(year != "2008")%>%
+  filter(year != "2009")
+```
+
+# Exercise 7.1
+##1.    Make a barplot showing the average flipper length for each species.
+
+```{r}
+
+```
+
+
+##2.    Make a scatter plot of bill length compared to bill depth but only for observations on the Dream island.
+
+```{r}
+
+```
+
+
+
+
+
+
+
 
 
 
