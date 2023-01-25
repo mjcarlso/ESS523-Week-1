@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 source("setup.R")
 ```
 
-```{r data}
+```{r data, include=F}
 data("penguins")
 penguins
 myList <- list("apple", 1993, FALSE, penguins)
@@ -20,7 +20,7 @@ names(myList) <- c("fruit", "year", "logic", "data")
 
 # Exercise 6.3.1
 
-##1.  Why don't the following lines of code work? Tweak each one so the code runs
+##1. Why don't the following lines of code work? Tweak each one so the code runs
 
 ```{r 1}
 myList[["fruit"]]
@@ -30,7 +30,7 @@ penguins$flipper_length_mm
 penguins[penguins$island=='Dream',]
 ```
 
-##2.  How many species are in the penguins dataset? What islands were the data collected for? (Note: the unique() function might help)
+##2. How many species are in the penguins dataset? What islands were the data collected for? (Note: the unique() function might help)
 
 ```{r}
 unique(penguins$species)
@@ -39,13 +39,13 @@ unique(penguins$island)
 
 There are 3 different species from the islands of Torgersen, Biscoe and Dream.
 
-##3.  Use indexing to create a new data frame that has only 3 columns: species, island and flipper length columns, and subset all rows for just the 'Dream' island.
+##3. Use indexing to create a new data frame that has only 3 columns: species, island and flipper length columns, and subset all rows for just the 'Dream' island.
 
 ```{r}
 indexing1<-penguins[penguins$island=='Dream', c("species", "island", "flipper_length_mm")]
 ```
 
-##4.  Use indexing and the mean() function to find the average flipper length for the Adelie species on Dream island. (Note: explore the mean() function and how to deal with NA values).
+##4. Use indexing and the mean() function to find the average flipper length for the Adelie species on Dream island. (Note: explore the mean() function and how to deal with NA values).
 
 ```{r}
 indexing2<-indexing1[indexing1$species=='Adelie',]
@@ -54,14 +54,17 @@ mean(indexing2$flipper_length_mm)
 
 # Exercise 6.3.2
 
-##1.  Reorder the variables in penguins so that year is the first column followed by the rest (Hint: look into the use of everything()).
+##1. Reorder the variables in penguins so that year is the first column followed by the rest (Hint: look into the use of everything()).
 
 ```{r}
 penguins<-penguins%>%
   relocate(year, species, island, bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g, sex)
+#or
+penguins%>%
+  select(year, everything())
 ```
 
-##2.  Create a new column called 'size_group' where individuals with body mass greater than the overall average are called 'large' and those smaller are called 'small'.
+##2. Create a new column called 'size_group' where individuals with body mass greater than the overall average are called 'large' and those smaller are called 'small'.
 
 ```{r}
 body_mass_avg <- mean(penguins$body_mass_g, na.rm = TRUE)
@@ -70,7 +73,7 @@ penguins<-penguins %>%
                               paste('large'), paste('small')))
 ```
 
-##3.  Find out which year for each species were individuals on average the largest according to body mass.
+##3. Find out which year for each species were individuals on average the largest according to body mass.
 
 ```{r}
 penguins %>% 
@@ -78,34 +81,35 @@ penguins %>%
   summarise(body_mass_avg = mean(body_mass_g, na.rm = TRUE))
 ```
 
-##4.  You want to filter data for years that are not in a vector of given years, but this code doesn't work. Tweak it so that it does. (Yes, you could just filter year to equal 2007 in this case but there is a trouble-shooting lessons here).
+##4. You want to filter data for years that are not in a vector of given years, but this code doesn't work. Tweak it so that it does. (Yes, you could just filter year to equal 2007 in this case but there is a trouble-shooting lessons here).
 
 ```{r}
 penguins7<-penguins %>% 
-  filter(year != "2008")%>%
-  filter(year != "2009")
+  filter(!year %in% c("2008", "2009"))
 ```
 
 # Exercise 7.1
-##1.    Make a barplot showing the average flipper length for each species.
+
+##1. Make a barplot showing the average flipper length for each species.
 
 ```{r}
-
+penguins%>%
+  group_by(species)%>%
+  summarise(mean_flipper = mean(flipper_length_mm, na.rm = T))%>%
+  ggplot(aes(x = species, y = mean_flipper))+
+    geom_bar(stat = "identity", show.legend = F, fill = c("darkorange","darkorchid","cyan4"))+
+    theme_bw()+
+    labs(x = "Species",
+         y = "Flipper Length (mm)")
 ```
 
-
-##2.    Make a scatter plot of bill length compared to bill depth but only for observations on the Dream island.
+##2. Make a scatter plot of bill length compared to bill depth but only for observations on the Dream island.
 
 ```{r}
-
+ggplot(penguins) +
+  geom_point(filter(penguins, island == "Dream"), 
+             mapping = aes(x = bill_length_mm, y = bill_depth_mm), color = "cyan3")+
+  theme_bw()+
+  labs(x = "Bill Length (mm)",
+       y = "Bill Depth (mm)")
 ```
-
-
-
-
-
-
-
-
-
-
