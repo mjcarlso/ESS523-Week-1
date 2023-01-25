@@ -97,7 +97,7 @@ penguins%>%
   group_by(species)%>%
   summarise(mean_flipper = mean(flipper_length_mm, na.rm = T))%>%
   ggplot(aes(x = species, y = mean_flipper))+
-    geom_bar(stat = "identity", show.legend = F, fill = c("darkorange","darkorchid","cyan4"))+
+    geom_bar(stat = "identity", fill = c("darkorange","darkorchid","cyan4"))+
     theme_bw()+
     labs(x = "Species",
          y = "Flipper Length (mm)")

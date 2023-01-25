@@ -1,0 +1,37 @@
+---
+title: "Week-1-Spatial"
+author: "Madeline Carlson"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+source("setup.R")
+```
+
+```{r data}
+counties <- counties(state = "CO")
+roads <- roads(state = "CO", county = "Larimer")
+tmap_mode("view")
+```
+
+# 4. Exercises 
+
+## 1. Filter out the counties data set to only include Larimer, Denver, and Pueblo counties.
+
+```{r}
+counties<-counties%>%
+  filter(NAME %in% c("Larimer", "Denver", "Pueblo"))
+```
+
+## 2. Make a map of the counties data colored by county area. Make a second map of counties colored by their total area of water.
+
+```{r}
+
+```
+
+
+## 3. Make a barplot comparing the elevation of your 3 points in the Poudre Canyon (note: explore the extract() function in the terra package).
+
+## 4. Why are there 4 features in our Poudre Canyon Highway variable instead of 1?

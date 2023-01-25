@@ -483,7 +483,7 @@ species.</p>
   group_by(species)%&gt;%
   summarise(mean_flipper = mean(flipper_length_mm, na.rm = T))%&gt;%
   ggplot(aes(x = species, y = mean_flipper))+
-    geom_bar(stat = &quot;identity&quot;, show.legend = F, fill = c(&quot;darkorange&quot;,&quot;darkorchid&quot;,&quot;cyan4&quot;))+
+    geom_bar(stat = &quot;identity&quot;, fill = c(&quot;darkorange&quot;,&quot;darkorchid&quot;,&quot;cyan4&quot;))+
     theme_bw()+
     labs(x = &quot;Species&quot;,
          y = &quot;Flipper Length (mm)&quot;)</code></pre>
