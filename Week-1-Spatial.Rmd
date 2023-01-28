@@ -10,28 +10,76 @@ knitr::opts_chunk$set(echo = TRUE)
 source("setup.R")
 ```
 
-```{r data}
+
+```{r, include=F}
 counties <- counties(state = "CO")
 roads <- roads(state = "CO", county = "Larimer")
 tmap_mode("view")
+
+poudre_hwy <- roads %>% 
+  filter(FULLNAME == "Poudre Canyon Hwy")
 ```
 
-# 4. Exercises 
+```{r}
+poudre_points <- data.frame(name = c("Mishawaka", "Rustic", "Blue Lake Trailhead"),
+                            long = c(-105.35634, -105.58159, -105.85563),
+                            lat = c(40.68752, 40.69687, 40.57960))
+poudre_points_sf <- st_as_sf(poudre_points, coords = c("long", "lat"), crs = 4326)
+
+poudre_points_prj <- st_transform(poudre_points_sf, st_crs(counties))
+st_crs(poudre_points_prj) == st_crs(counties)
+```
+
+```{r, include=FALSE}
+elevation <- get_elev_raster(counties, z = 7)
+
+tm_shape(elevation)+
+  tm_raster(style = "cont", title = "Elevation (m)")
+```
+
+```{r}
+elevation <- rast(elevation)
+names(elevation) <- "Elevation"
+
+elevation_crop <- crop(elevation, ext(roads))
+
+tm_shape(elevation, bbox = st_bbox(poudre_hwy))+
+  tm_raster(style = "cont", title = "Elevation (m)")+
+tm_shape(poudre_hwy)+
+  tm_lines()+
+tm_shape(poudre_points_prj)+
+  tm_dots(size = 0.2)
+```
+
+# 4. Exercises
 
 ## 1. Filter out the counties data set to only include Larimer, Denver, and Pueblo counties.
 
 ```{r}
-counties<-counties%>%
+counties3<-counties%>%
   filter(NAME %in% c("Larimer", "Denver", "Pueblo"))
 ```
 
 ## 2. Make a map of the counties data colored by county area. Make a second map of counties colored by their total area of water.
 
 ```{r}
+tm_shape(counties)+
+  tm_polygons(col = "ALAND")
 
+tm_shape(counties)+
+  tm_polygons(col = "AWATER")
 ```
-
 
 ## 3. Make a barplot comparing the elevation of your 3 points in the Poudre Canyon (note: explore the extract() function in the terra package).
 
-## 4. Why are there 4 features in our Poudre Canyon Highway variable instead of 1?
+```{r}
+poudre_points_prj$elevation <- extract(elevation, vect(poudre_points_prj))$Elevation 
+    
+poudre_points_prj %>% 
+  ggplot() +
+  geom_bar(aes(x = name, y = elevation), stat = "identity")
+```
+
+## 4.  Why are there 4 features in our Poudre Canyon Highway variable instead of 1?
+
+There are 3 small segments of highway not attached to the main highway but have the same name.
